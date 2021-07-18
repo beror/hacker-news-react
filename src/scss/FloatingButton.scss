@@ -1,0 +1,23 @@
+.floating-button {
+  display: none;
+  position: fixed;
+  bottom: 15px;
+  right: 10px;
+
+  width: 70px;
+  height: 70px;
+
+  border-radius: 50%;
+  border: none;
+  background-color: #01987A;
+  color: white;
+  cursor: pointer;
+
+  &:hover {
+    background-color: sienna;
+  }
+
+  @media screen and (max-width: 600px) {
+    display: block;
+  }
+}

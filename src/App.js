@@ -1,5 +1,5 @@
 import React, { createContext, useReducer } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 import NavBar from './NavBar';
 import MainTable from './MainTable';
 import FloatingButton from './FloatingButton';

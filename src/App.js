@@ -4,6 +4,7 @@ import NavBar from './NavBar';
 import MainTable from './MainTable';
 import FloatingButton from './FloatingButton';
 import rootReducer from './reducers';
+import './scss/global.scss';
 
 const feedTypes = {
   NEWS: 'news',
@@ -16,10 +17,10 @@ const MainTableContext = createContext();
 
 const App = () => {
   const [state, dispatch] = useReducer(rootReducer, {
-    [feedTypes.NEWS]: {order: 'asc', pages: []},
-    [feedTypes.NEWEST]: {order: 'asc', pages: []},
-    [feedTypes.SHOW]: {order: 'asc', pages: []},
-    [feedTypes.JOBS]: {order: 'asc', pages: []}
+    [feedTypes.NEWS]: {order: null, pages: []},
+    [feedTypes.NEWEST]: {order: null, pages: []},
+    [feedTypes.SHOW]: {order: null, pages: []},
+    [feedTypes.JOBS]: {order: null, pages: []}
   });
 
   return (

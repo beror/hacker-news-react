@@ -107,7 +107,7 @@ const newsReducer = (state, action) => {
     case 'news/reset':
       return {
         ...state,
-        [feedTypes.NEWS]: []
+        [feedTypes.NEWS]: {order: null, pages: []}
       }
 
     default:
@@ -201,7 +201,7 @@ const newestReducer = (state, action) => {
     case 'newest/reset':
       return {
         ...state,
-        [feedTypes.NEWEST]: []
+        [feedTypes.NEWEST]: {order: null, pages: []}
       }
 
     default:
@@ -295,7 +295,7 @@ const showReducer = (state, action) => {
     case 'show/reset':
       return {
         ...state,
-        [feedTypes.SHOW]: []
+        [feedTypes.SHOW]: {order: null, pages: []}
       }
 
     default:
@@ -389,7 +389,7 @@ const jobsReducer = (state, action) => {
     case 'jobs/reset':
       return {
         ...state,
-        [feedTypes.JOBS]: []
+        [feedTypes.JOBS]: {order: null, pages: []}
       }
 
     default:

@@ -7,9 +7,17 @@ const FloatingButton = () => {
   const { state, dispatch } = useContext(MainTableContext);
   const feedType = useLocation().pathname.substring(1);
 
+  const dispatchToggleOrderByDate = () => {
+    if(state[feedType].order === 'asc') {
+      dispatch({type: feedType + '/sortByDate/desc'});
+    } else if(state[feedType].order === 'desc' || state[feedType].order === null) {
+      dispatch({type: feedType + '/sortByDate/asc'});
+    }
+  }
+
   return (
     <button
-      onClick={() => dispatch({type: feedType + '/sortByDate'})}
+      onClick={() => dispatchToggleOrderByDate()}
       className='floating-button'>⇅<br/>DATE
     </button>
   );

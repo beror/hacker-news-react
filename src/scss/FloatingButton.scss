@@ -1,3 +1,5 @@
+@import 'vars.scss';
+
 .floating-button {
   display: none;
   position: fixed;
@@ -9,12 +11,18 @@
 
   border-radius: 50%;
   border: none;
-  background-color: #01987A;
+  background-color: var(--main-color);
   color: white;
   cursor: pointer;
 
+  transition-duration: 0.2s;
+
   &:hover {
-    background-color: sienna;
+    bottom: 12px;
+    right: 7px;
+
+    width: 76px;
+    height: 76px;
   }
 
   @media screen and (max-width: 600px) {

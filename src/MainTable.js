@@ -7,12 +7,36 @@ const MainTable = (props) => {
   let apiUrlPagePreceedingPart = props.apiUrl.substr(0, props.apiUrl.indexOf('.json') - 1);
   let isPageLoading = false;
 
+  const dispatchToggleOrderByDate = (order) => {
+    if(order === 'asc') {
+      dispatch({type: props.feedType + '/sortByDate/desc'});
+    } else if(order === 'desc' || order === null) {
+      dispatch({type: props.feedType + '/sortByDate/asc'});
+    }
+  }
+
+  const dispatchToggleOrderByTitle = (order) => {
+    if(order === 'asc') {
+      dispatch({type: props.feedType + '/sortByTitle/desc'});
+    } else if(order === 'desc' || order === null) {
+      dispatch({type: props.feedType + '/sortByTitle/asc'});
+    }
+  }
+
+  const dispatchToggleOrderByDomain = (order) => {
+    if(order === 'asc') {
+      dispatch({type: props.feedType + '/sortByDomain/desc'});
+    } else if(order === 'desc' || order === null) {
+      dispatch({type: props.feedType + '/sortByDomain/asc'});
+    }
+  }
+
   window.onscroll = () => {
     let isUserNearBottom = document.documentElement.offsetHeight - document.documentElement.scrollTop <= window.innerHeight + 300;
 
     if(isUserNearBottom && !isPageLoading) {
       isPageLoading = true;
-      fetch(apiUrlPagePreceedingPart + (state[props.feedType].length + 1) + '.json')
+      fetch(apiUrlPagePreceedingPart + (state[props.feedType].pages.length + 1) + '.json')
         .then(res => res.json())
         .then(data => {
           dispatch({type: props.feedType + '/addPage', payload: data});
@@ -22,7 +46,7 @@ const MainTable = (props) => {
   }
 
   useEffect(() => {
-    fetch(apiUrlPagePreceedingPart + (state[props.feedType].length + 1) + '.json')
+    fetch(apiUrlPagePreceedingPart + (state[props.feedType].pages.length + 1) + '.json')
       .then(res => res.json())
       .then(data => {
         dispatch({type: props.feedType + '/addPage', payload: data});
@@ -36,22 +60,22 @@ const MainTable = (props) => {
       <thead>
         <tr>
           <th
-            onClick={() => dispatch({type: props.feedType + '/sortByDate'})}
+            onClick={() => dispatchToggleOrderByDate(state[props.feedType].order)}
             className='small-column non-mobile-cell'>Time ago ⇅
           </th>
           <th
             className='big-column'
-            onClick={() => dispatch({type: props.feedType + '/sortByTitle'})}>Title ⇅
+            onClick={() => dispatchToggleOrderByTitle(state[props.feedType].order)}>Title ⇅
           </th>
           <th
             className='small-column non-mobile-cell'
-            onClick={() => dispatch({type: props.feedType + '/sortByDomain'})}>Domain ⇅
+            onClick={() => dispatchToggleOrderByDomain(state[props.feedType].order)}>Domain ⇅
           </th>
         </tr>
       </thead>
       <tbody>
         {
-          state[props.feedType].map((page, idx) => page.map((feedItem, idx2) => {
+          state[props.feedType].pages.map((page, idx) => page.map((feedItem, idx2) => {
             return (
               <tr key={'tr' + idx + idx2}>
                 <td className='small-cell non-mobile-cell'>

@@ -16,10 +16,10 @@ const MainTableContext = createContext();
 
 const App = () => {
   const [state, dispatch] = useReducer(rootReducer, {
-    [feedTypes.NEWS]: [],
-    [feedTypes.NEWEST]: [],
-    [feedTypes.SHOW]: [],
-    [feedTypes.JOBS]: []
+    [feedTypes.NEWS]: {order: 'asc', pages: []},
+    [feedTypes.NEWEST]: {order: 'asc', pages: []},
+    [feedTypes.SHOW]: {order: 'asc', pages: []},
+    [feedTypes.JOBS]: {order: 'asc', pages: []}
   });
 
   return (

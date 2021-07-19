@@ -1,6 +1,7 @@
 import { feedTypes } from './App';
 
 const rootReducer = (state, action) => {
+  console.log(action.type);
   const feedType = action.type.substring(0, action.type.indexOf('/'));
   switch(feedType) {
     case 'news':
@@ -24,24 +25,32 @@ const rootReducer = (state, action) => {
 const newsReducer = (state, action) => {
   switch(action.type) {
     case 'news/addPage':
-      const newNews = [...state.news];
+      const newNews = [...state.news.pages];
       newNews.push(action.payload);
       return {
         ...state,
-        [feedTypes.NEWS]: newNews
+        [feedTypes.NEWS]: {order: null, pages: newNews}
       }
 
-    case 'news/sortByDate':
-      const sortedByDate = [...state.news];
-      sortedByDate.forEach(page => page.sort((a, b) => b.time - a.time));
+    case 'news/sortByDate/asc':
+      const ascSortedByDate = [...state.news.pages];
+      ascSortedByDate.forEach(page => page.sort((a, b) => b.time - a.time));
       return {
         ...state,
-        [feedTypes.NEWS]: sortedByDate
+        [feedTypes.NEWS]: {order: 'asc', pages: ascSortedByDate}
       }
 
-    case 'news/sortByTitle':
-      const sortedByTitle = [...state.news];
-      sortedByTitle.forEach(page => page.sort((a, b) => {
+    case 'news/sortByDate/desc':
+      const descSortedByDate = [...state.news.pages];
+      descSortedByDate.forEach(page => page.sort((a, b) => a.time - b.time));
+      return {
+        ...state,
+        [feedTypes.NEWS]: {order: 'desc', pages: descSortedByDate}
+      }
+
+    case 'news/sortByTitle/asc':
+      const ascSortedByTitle = [...state.news.pages];
+      ascSortedByTitle.forEach(page => page.sort((a, b) => {
         if(a.title === undefined) return 1
         if(b.title === undefined) return -1;
         if(a.title < b.title) return -1;
@@ -50,12 +59,26 @@ const newsReducer = (state, action) => {
       }));
       return {
         ...state,
-        [feedTypes.NEWS]: sortedByTitle
+        [feedTypes.NEWS]: {order: 'asc', pages: ascSortedByTitle}
       }
 
-    case 'news/sortByDomain':
-      const sortedByDomain = [...state.news];
-      sortedByDomain.forEach(page => page.sort((a, b) => {
+    case 'news/sortByTitle/desc':
+      const descSortedByTitle = [...state.news.pages];
+      descSortedByTitle.forEach(page => page.sort((a, b) => {
+        if(a.title === undefined) return -1
+        if(b.title === undefined) return 1;
+        if(a.title > b.title) return -1;
+        if(a.title < b.title) return 1;
+        return 0;
+      }));
+      return {
+        ...state,
+        [feedTypes.NEWS]: {order: 'desc', pages: descSortedByTitle}
+      }
+
+    case 'news/sortByDomain/asc':
+      const ascSortedByDomain = [...state.news.pages];
+      ascSortedByDomain.forEach(page => page.sort((a, b) => {
         if(a.domain === undefined) return 1
         if(b.domain === undefined) return -1;
         if(a.domain < b.domain) return -1;
@@ -64,7 +87,21 @@ const newsReducer = (state, action) => {
       }));
       return {
         ...state,
-        [feedTypes.NEWS]: sortedByDomain
+        [feedTypes.NEWS]: {order: 'asc', pages: ascSortedByDomain}
+      }
+
+    case 'news/sortByDomain/desc':
+      const descSortedByDomain = [...state.news.pages];
+      descSortedByDomain.forEach(page => page.sort((a, b) => {
+        if(a.domain === undefined) return -1
+        if(b.domain === undefined) return 1;
+        if(a.domain < b.domain) return 1;
+        if(a.domain > b.domain) return -1;
+        return 0;
+      }));
+      return {
+        ...state,
+        [feedTypes.NEWS]: {order: 'desc', pages: descSortedByDomain}
       }
 
     case 'news/reset':
@@ -82,24 +119,32 @@ const newsReducer = (state, action) => {
 const newestReducer = (state, action) => {
   switch(action.type) {
     case 'newest/addPage':
-      const newNewest = [...state.newest];
+      const newNewest = [...state.newest.pages];
       newNewest.push(action.payload);
       return {
         ...state,
-        [feedTypes.NEWEST]: newNewest
+        [feedTypes.NEWEST]: {order: null, pages: newNewest}
       }
 
-    case 'newest/sortByDate':
-      const newestSortedByDate = [...state.newest];
-      newestSortedByDate.forEach(page => page.sort((a, b) => b.time - a.time));
+    case 'newest/sortByDate/asc':
+      const ascNewestSortedByDate = [...state.newest.pages];
+      ascNewestSortedByDate.forEach(page => page.sort((a, b) => b.time - a.time));
       return {
         ...state,
-        [feedTypes.NEWEST]: newestSortedByDate
+        [feedTypes.NEWEST]: {order: 'asc', pages: ascNewestSortedByDate}
       }
 
-    case 'newest/sortByTitle':
-    const newestSortedByTitle = [...state.newest];
-    newestSortedByTitle.forEach(page => page.sort((a, b) => {
+    case 'newest/sortByDate/desc':
+      const descNewestSortedByDate = [...state.newest.pages];
+      descNewestSortedByDate.forEach(page => page.sort((a, b) => a.time - b.time));
+      return {
+        ...state,
+        [feedTypes.NEWEST]: {order: 'desc', pages: descNewestSortedByDate}
+      }
+
+    case 'newest/sortByTitle/asc':
+    const ascNewestSortedByTitle = [...state.newest.pages];
+    ascNewestSortedByTitle.forEach(page => page.sort((a, b) => {
       if(a.title === undefined) return 1
       if(b.title === undefined) return -1;
       if(a.title < b.title) return -1;
@@ -108,12 +153,26 @@ const newestReducer = (state, action) => {
     }));
     return {
       ...state,
-      [feedTypes.NEWEST]: newestSortedByTitle
+      [feedTypes.NEWEST]: {order: 'asc', pages: ascNewestSortedByTitle}
     }
 
-    case 'newest/sortByDomain':
-      const newestSortedByDomain = [...state.newest];
-      newestSortedByDomain.forEach(page => page.sort((a, b) => {
+    case 'newest/sortByTitle/desc':
+      const descNewestSortedByTitle = [...state.newest.pages];
+      descNewestSortedByTitle.forEach(page => page.sort((a, b) => {
+        if(a.title === undefined) return -1
+        if(b.title === undefined) return 1;
+        if(a.title < b.title) return 1;
+        if(a.title > b.title) return -1;
+        return 0;
+      }));
+      return {
+        ...state,
+        [feedTypes.NEWEST]: {order: 'desc', pages: descNewestSortedByTitle}
+      }
+
+    case 'newest/sortByDomain/asc':
+      const ascNewestSortedByDomain = [...state.newest.pages];
+      ascNewestSortedByDomain.forEach(page => page.sort((a, b) => {
         if(a.domain === undefined) return 1
         if(b.domain === undefined) return -1;
         if(a.domain < b.domain) return -1;
@@ -122,7 +181,21 @@ const newestReducer = (state, action) => {
       }));
       return {
         ...state,
-        [feedTypes.NEWEST]: newestSortedByDomain
+        [feedTypes.NEWEST]: {order: 'asc', pages: ascNewestSortedByDomain}
+      }
+
+    case 'newest/sortByDomain/desc':
+      const descNewestSortedByDomain = [...state.newest.pages];
+      descNewestSortedByDomain.forEach(page => page.sort((a, b) => {
+        if(a.domain === undefined) return -1
+        if(b.domain === undefined) return 1;
+        if(a.domain < b.domain) return 1;
+        if(a.domain > b.domain) return -1;
+        return 0;
+      }));
+      return {
+        ...state,
+        [feedTypes.NEWEST]: {order: 'desc', pages: descNewestSortedByDomain}
       }
 
     case 'newest/reset':
@@ -140,24 +213,32 @@ const newestReducer = (state, action) => {
 const showReducer = (state, action) => {
   switch(action.type) {
     case 'show/addPage':
-      const newShow = [...state.show];
+      const newShow = [...state.show.pages];
       newShow.push(action.payload);
       return {
         ...state,
-        [feedTypes.SHOW]: newShow
+        [feedTypes.SHOW]: {order: null, pages: newShow}
       }
 
-    case 'show/sortByDate':
-      const showSortedByDate = [...state.show];
-      showSortedByDate.forEach(page => page.sort((a, b) => b.time - a.time));
+    case 'show/sortByDate/asc':
+      const ascShowSortedByDate = [...state.show.pages];
+      ascShowSortedByDate.forEach(page => page.sort((a, b) => b.time - a.time));
       return {
         ...state,
-        [feedTypes.SHOW]: showSortedByDate
+        [feedTypes.SHOW]: {order: 'asc', pages: ascShowSortedByDate}
       }
 
-    case 'show/sortByTitle':
-    const showSortedByTitle = [...state.show];
-    showSortedByTitle.forEach(page => page.sort((a, b) => {
+    case 'show/sortByDate/desc':
+      const descShowSortedByDate = [...state.show.pages];
+      descShowSortedByDate.forEach(page => page.sort((a, b) => a.time - b.time));
+      return {
+        ...state,
+        [feedTypes.SHOW]: {order: 'desc', pages: descShowSortedByDate}
+      }
+
+    case 'show/sortByTitle/asc':
+    const ascShowSortedByTitle = [...state.show.pages];
+    ascShowSortedByTitle.forEach(page => page.sort((a, b) => {
       if(a.title === undefined) return 1
       if(b.title === undefined) return -1;
       if(a.title < b.title) return -1;
@@ -166,12 +247,26 @@ const showReducer = (state, action) => {
     }));
     return {
       ...state,
-      [feedTypes.SHOW]: showSortedByTitle
+      [feedTypes.SHOW]: {order: 'asc', pages: ascShowSortedByTitle}
     }
 
-    case 'show/sortByDomain':
-      const showSortedByDomain = [...state.show];
-      showSortedByDomain.forEach(page => page.sort((a, b) => {
+    case 'show/sortByTitle/desc':
+      const descShowSortedByTitle = [...state.show.pages];
+      descShowSortedByTitle.forEach(page => page.sort((a, b) => {
+        if(a.title === undefined) return -1
+        if(b.title === undefined) return 1;
+        if(a.title < b.title) return 1;
+        if(a.title > b.title) return -1;
+        return 0;
+      }));
+      return {
+        ...state,
+        [feedTypes.SHOW]: {order: 'desc', pages: descShowSortedByTitle}
+      }
+
+    case 'show/sortByDomain/asc':
+      const ascShowSortedByDomain = [...state.show.pages];
+      ascShowSortedByDomain.forEach(page => page.sort((a, b) => {
         if(a.domain === undefined) return 1
         if(b.domain === undefined) return -1;
         if(a.domain < b.domain) return -1;
@@ -180,7 +275,21 @@ const showReducer = (state, action) => {
       }));
       return {
         ...state,
-        [feedTypes.SHOW]: showSortedByDomain
+        [feedTypes.SHOW]: {order: 'asc', pages: ascShowSortedByDomain}
+      }
+
+    case 'show/sortByDomain/desc':
+      const descShowSortedByDomain = [...state.show.pages];
+      descShowSortedByDomain.forEach(page => page.sort((a, b) => {
+        if(a.domain === undefined) return -1
+        if(b.domain === undefined) return 1;
+        if(a.domain < b.domain) return 1;
+        if(a.domain > b.domain) return -1;
+        return 0;
+      }));
+      return {
+        ...state,
+        [feedTypes.SHOW]: {order: 'desc', pages: descShowSortedByDomain}
       }
 
     case 'show/reset':
@@ -198,24 +307,32 @@ const showReducer = (state, action) => {
 const jobsReducer = (state, action) => {
   switch(action.type) {
     case 'jobs/addPage':
-      const newJobs = [...state.jobs];
+      const newJobs = [...state.jobs.pages];
       newJobs.push(action.payload);
       return {
         ...state,
-        [feedTypes.JOBS]: newJobs
+        [feedTypes.JOBS]: {order: null, pages: newJobs}
       }
 
-    case 'jobs/sortByDate':
-      const jobsSortedByDate = [...state.jobs];
-      jobsSortedByDate.forEach(page => page.sort((a, b) => b.time - a.time));
+    case 'jobs/sortByDate/asc':
+      const ascJobsSortedByDate = [...state.jobs.pages];
+      ascJobsSortedByDate.forEach(page => page.sort((a, b) => b.time - a.time));
       return {
         ...state,
-        [feedTypes.JOBS]: jobsSortedByDate
+        [feedTypes.JOBS]: {order: 'asc', pages: ascJobsSortedByDate}
       }
 
-    case 'jobs/sortByTitle':
-    const jobsSortedByTitle = [...state.jobs];
-    jobsSortedByTitle.forEach(page => page.sort((a, b) => {
+    case 'jobs/sortByDate/desc':
+      const descJobsSortedByDate = [...state.jobs.pages];
+      descJobsSortedByDate.forEach(page => page.sort((a, b) => a.time - b.time));
+      return {
+        ...state,
+        [feedTypes.JOBS]: {order: 'desc', pages: descJobsSortedByDate}
+      }
+
+    case 'jobs/sortByTitle/asc':
+    const ascJobsSortedByTitle = [...state.jobs.pages];
+    ascJobsSortedByTitle.forEach(page => page.sort((a, b) => {
       if(a.title === undefined) return 1
       if(b.title === undefined) return -1;
       if(a.title < b.title) return -1;
@@ -224,12 +341,26 @@ const jobsReducer = (state, action) => {
     }));
     return {
       ...state,
-      [feedTypes.JOBS]: jobsSortedByTitle
+      [feedTypes.JOBS]: {order: 'asc', pages: ascJobsSortedByTitle}
     }
 
-    case 'jobs/sortByDomain':
-      const jobsSortedByDomain = [...state.jobs];
-      jobsSortedByDomain.forEach(page => page.sort((a, b) => {
+    case 'jobs/sortByTitle/desc':
+      const descJobsSortedByTitle = [...state.jobs.pages];
+      descJobsSortedByTitle.forEach(page => page.sort((a, b) => {
+        if(a.title === undefined) return -1
+        if(b.title === undefined) return 1;
+        if(a.title < b.title) return 1;
+        if(a.title > b.title) return -1;
+        return 0;
+      }));
+      return {
+        ...state,
+        [feedTypes.JOBS]: {order: 'desc', pages: descJobsSortedByTitle}
+      }
+
+    case 'jobs/sortByDomain/asc':
+      const ascJobsSortedByDomain = [...state.jobs.pages];
+      ascJobsSortedByDomain.forEach(page => page.sort((a, b) => {
         if(a.domain === undefined) return 1
         if(b.domain === undefined) return -1;
         if(a.domain < b.domain) return -1;
@@ -238,7 +369,21 @@ const jobsReducer = (state, action) => {
       }));
       return {
         ...state,
-        [feedTypes.JOBS]: jobsSortedByDomain
+        [feedTypes.JOBS]: {order: 'asc', pages: ascJobsSortedByDomain}
+      }
+
+    case 'jobs/sortByDomain/desc':
+      const descJobsSortedByDomain = [...state.jobs.pages];
+      descJobsSortedByDomain.forEach(page => page.sort((a, b) => {
+        if(a.domain === undefined) return -1
+        if(b.domain === undefined) return 1;
+        if(a.domain < b.domain) return 1;
+        if(a.domain > b.domain) return -1;
+        return 0;
+      }));
+      return {
+        ...state,
+        [feedTypes.JOBS]: {order: 'desc', pages: descJobsSortedByDomain}
       }
 
     case 'jobs/reset':

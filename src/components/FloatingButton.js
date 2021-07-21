@@ -8,11 +8,10 @@ const FloatingButton = () => {
   const feedType = useLocation().pathname.substring(1);
 
   const dispatchToggleOrderByDate = () => {
-    if(state[feedType].order === 'asc') {
-      dispatch({type: feedType + '/sortByDate/desc'});
-    } else if(state[feedType].order === 'desc' || state[feedType].order === null) {
-      dispatch({type: feedType + '/sortByDate/asc'});
-    }
+    const toggedOrderType = getToggledOrderType(state[feedType].order);
+
+    toggedOrderType && dispatch({type: feedType + '/sortByDate/'
+      + toggedOrderType});
   }
 
   return (
@@ -21,6 +20,14 @@ const FloatingButton = () => {
       className='floating-button'>⇅<br/>DATE
     </button>
   );
+}
+
+const getToggledOrderType = order => {
+  if(! ['asc', 'desc', null].includes(order)) {
+    return;
+  }
+
+  return order === 'desc' || order === null ? 'asc' : 'desc';
 }
 
 export default FloatingButton;

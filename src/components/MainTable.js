@@ -2,45 +2,42 @@ import React, { useEffect, useContext } from 'react';
 import { MainTableContext } from './App';
 import '../scss/MainTable.scss';
 
-const MainTable = (props) => {
+const MainTable = props => {
   const { state, dispatch } = useContext(MainTableContext);
   let apiUrlPagePreceedingPart = props.apiUrl.substr(0, props.apiUrl.indexOf('.json') - 1);
-  let isPageLoading = false;
+  let isFeedPageLoading = false;
 
-  const dispatchToggleOrderByDate = (order) => {
-    if(order === 'asc') {
-      dispatch({type: props.feedType + '/sortByDate/desc'});
-    } else if(order === 'desc' || order === null) {
-      dispatch({type: props.feedType + '/sortByDate/asc'});
-    }
+  const dispatchToggleOrderByDate = () => {
+    const toggedOrderType = getToggledOrderType(state[props.feedType].order);
+
+    toggedOrderType && dispatch({type: props.feedType + '/sortByDate/'
+      + toggedOrderType});
   }
 
-  const dispatchToggleOrderByTitle = (order) => {
-    if(order === 'asc') {
-      dispatch({type: props.feedType + '/sortByTitle/desc'});
-    } else if(order === 'desc' || order === null) {
-      dispatch({type: props.feedType + '/sortByTitle/asc'});
-    }
+  const dispatchToggleOrderByTitle = () => {
+    const toggedOrderType = getToggledOrderType(state[props.feedType].order);
+
+    toggedOrderType && dispatch({type: props.feedType + '/sortByTitle/'
+      + toggedOrderType});
   }
 
-  const dispatchToggleOrderByDomain = (order) => {
-    if(order === 'asc') {
-      dispatch({type: props.feedType + '/sortByDomain/desc'});
-    } else if(order === 'desc' || order === null) {
-      dispatch({type: props.feedType + '/sortByDomain/asc'});
-    }
+  const dispatchToggleOrderByDomain = () => {
+    const toggedOrderType = getToggledOrderType(state[props.feedType].order);
+
+    toggedOrderType && dispatch({type: props.feedType + '/sortByDomain/'
+      + toggedOrderType});
   }
 
   window.onscroll = () => {
     let isUserNearBottom = document.documentElement.offsetHeight - document.documentElement.scrollTop <= window.innerHeight + 300;
 
-    if(isUserNearBottom && !isPageLoading) {
-      isPageLoading = true;
+    if(isUserNearBottom && !isFeedPageLoading) {
+      isFeedPageLoading = true;
       fetch(apiUrlPagePreceedingPart + (state[props.feedType].pages.length + 1) + '.json')
         .then(res => res.json())
         .then(data => {
           dispatch({type: props.feedType + '/addPage', payload: data});
-          isPageLoading = false;
+          isFeedPageLoading = false;
         });
     }
   }
@@ -48,9 +45,7 @@ const MainTable = (props) => {
   useEffect(() => {
     fetch(apiUrlPagePreceedingPart + (state[props.feedType].pages.length + 1) + '.json')
       .then(res => res.json())
-      .then(data => {
-        dispatch({type: props.feedType + '/addPage', payload: data});
-      });
+      .then(data => dispatch({type: props.feedType + '/addPage', payload: data}));
 
       return (() => dispatch({type: props.feedType + '/reset'}));
   }, []);
@@ -60,16 +55,16 @@ const MainTable = (props) => {
       <thead>
         <tr>
           <th
-            onClick={() => dispatchToggleOrderByDate(state[props.feedType].order)}
+            onClick={() => dispatchToggleOrderByDate()}
             className='small-column non-mobile-cell'>Time ago ⇅
           </th>
           <th
             className='big-column'
-            onClick={() => dispatchToggleOrderByTitle(state[props.feedType].order)}>Title ⇅
+            onClick={() => dispatchToggleOrderByTitle()}>Title ⇅
           </th>
           <th
             className='small-column non-mobile-cell'
-            onClick={() => dispatchToggleOrderByDomain(state[props.feedType].order)}>Domain ⇅
+            onClick={() => dispatchToggleOrderByDomain()}>Domain ⇅
           </th>
         </tr>
       </thead>
@@ -107,6 +102,14 @@ const MainTable = (props) => {
       </tbody>
     </table>
   );
+}
+
+const getToggledOrderType = order => {
+  if(! ['asc', 'desc', null].includes(order)) {
+    return;
+  }
+
+  return order === 'desc' || order === null ? 'asc' : 'desc';
 }
 
 export default MainTable;

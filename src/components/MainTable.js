@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
-import { MainTableContext }  from './App';
-import './scss/MainTable.scss';
+import { MainTableContext } from './App';
+import '../scss/MainTable.scss';
 
 const MainTable = (props) => {
   const { state, dispatch } = useContext(MainTableContext);

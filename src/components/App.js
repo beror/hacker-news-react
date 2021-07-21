@@ -3,8 +3,8 @@ import { HashRouter as Router, Route } from 'react-router-dom';
 import NavBar from './NavBar';
 import MainTable from './MainTable';
 import FloatingButton from './FloatingButton';
-import rootReducer from './reducers';
-import './scss/global.scss';
+import rootReducer from '../reducers';
+import '../scss/global.scss';
 
 const feedTypes = {
   NEWS: 'news',

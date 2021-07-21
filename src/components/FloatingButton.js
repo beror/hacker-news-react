@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MainTableContext } from './App';
-import './scss/FloatingButton.scss';
+import '../scss/FloatingButton.scss';
 
 const FloatingButton = () => {
   const { state, dispatch } = useContext(MainTableContext);
